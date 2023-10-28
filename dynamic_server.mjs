@@ -42,9 +42,23 @@ app.get('/', (req, res) => {
 })
 
 // Route 1: Relationship Status
-app.get('/rel/:rel-status/:entry', (req, res) => {
-    // Get file path to index.html
-    let filepath = path.join(template, 'temp.html');
+app.get('/rel/:relStatus?/:entry?', (req, res) => {
+    // relStatus and entry are optional
+    let relStatus = req.params.relStatus;
+    let entry = req.params.entry;
+    let filepath;
+
+    // Check if entry is populated
+    if (entry) {
+        // Go to participant because entry populated
+        filepath = path.join(template, 'participant.html');
+    } else {
+        // Otherwise display result page
+        filepath = path.join(template, 'result.html');
+
+        // Check if relStatus is populated, then display queries based on it
+    }
+    
 
     fs.readFile(filepath, "utf-8", (err, data) => {
         console.log(filepath);
@@ -52,6 +66,8 @@ app.get('/rel/:rel-status/:entry', (req, res) => {
             console.log('Relation Read Error');
             res.status(404).type('txt').send('File not found');
         } else {
+            console.log(entry);
+            console.log(relStatus);
             console.log('Relation Read Success');
             res.status(200).type('html').send(data);
         }
@@ -59,9 +75,22 @@ app.get('/rel/:rel-status/:entry', (req, res) => {
 });
 
 // Route 2: Gender
-app.get('/gdr/:gender/:entry', (req, res) => {
-    // Get file path to index.html
-    let filepath = path.join(template, 'temp.html');
+app.get('/gdr/:gender?/:entry?', (req, res) => {
+    // gender and entry are optional
+    let gender = req.params.relStatus;
+    let entry = req.params.entry;
+    let filepath;
+
+    // Check if entry is populated
+    if (entry) {
+        // Go to participant because entry populated
+        filepath = path.join(template, 'participant.html');
+    } else {
+        // Otherwise display result page
+        filepath = path.join(template, 'result.html');
+
+        // Check if gender is populated, then display queries based on it
+    }
 
     fs.readFile(filepath, "utf-8", (err, data) => {
         console.log(filepath);
@@ -76,9 +105,22 @@ app.get('/gdr/:gender/:entry', (req, res) => {
 });
 
 // Route 3: Location
-app.get('/loc/:location/:entry', (req, res) => {
-    // Get file path to index.html
-    let filepath = path.join(template, 'temp.html');
+app.get('/loc/:location?/:entry?', (req, res) => {
+    // location and entry are optional
+    let location = req.params.relStatus;
+    let entry = req.params.entry;
+    let filepath;
+
+    // Check if entry is populated
+    if (entry) {
+        // Go to participant because entry populated
+        filepath = path.join(template, 'participant.html');
+    } else {
+        // Otherwise display result page
+        filepath = path.join(template, 'result.html');
+
+        // Check if location is populated, then display queries based on it
+    }
 
     fs.readFile(filepath, "utf-8", (err, data) => {
         console.log(filepath);
