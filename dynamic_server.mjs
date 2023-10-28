@@ -10,11 +10,13 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const port = 8000;
 const root = path.join(__dirname, 'public');
 const template = path.join(__dirname, 'templates');
+const data = path.join(__dirname, 'data');
+
 
 let app = express();
 app.use(express.static(root));
 
-const db = new sqlite3.Database(path.join(__dirname, 'sleeping-alone.sqlite3'), sqlite3.OPEN_READONLY, (err) => {
+const db = new sqlite3.Database(path.join(data, 'data.sqlite3'), sqlite3.OPEN_READONLY, (err) => {
     if (err) {
         console.log('Database read error');
     } else {

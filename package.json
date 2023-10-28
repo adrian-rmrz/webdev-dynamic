@@ -6,7 +6,7 @@
         "name": "Adrian Ramirez",
         "email": "rami7282@stthomas.edu"
     },
-    "contributors": [],
+    "contributors": ["Rainsei C.", "Nate G."], 
     "repository": {},
     "dependencies": {
         "express": "^4.18.2",
