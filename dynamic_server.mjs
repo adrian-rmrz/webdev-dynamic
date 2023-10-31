@@ -16,6 +16,7 @@ const data = path.join(__dirname, 'data');
 let app = express();
 app.use(express.static(root));
 
+// Connect to database
 const db = new sqlite3.Database(path.join(data, 'data.sqlite3'), sqlite3.OPEN_READONLY, (err) => {
     if (err) {
         console.log('Database read error');
@@ -23,6 +24,19 @@ const db = new sqlite3.Database(path.join(data, 'data.sqlite3'), sqlite3.OPEN_RE
         console.log('Fully connected to database');
     }
 });
+
+function dbSelect(query, params) {
+    let p = new Promise((resolve, reject) => {
+        db.all(query, params, (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+        });
+    });
+    return p;
+}
 
 // Homepage display
 app.get('/', (req, res) => {
@@ -33,7 +47,7 @@ app.get('/', (req, res) => {
         console.log(filepath);
         if (err) {
             console.log('Home Read Error');
-            res.status(404).type('txt').send('File not found');
+            res.status(404).type('txt').send('Home page could not displayed');
         } else {
             console.log('Home Read Success');
             res.status(200).type('html').send(data);
@@ -42,95 +56,132 @@ app.get('/', (req, res) => {
 })
 
 // Route 1: Relationship Status
-app.get('/rel/:relStatus?/:entry?', (req, res) => {
-    // relStatus and entry are optional
-    let relStatus = req.params.relStatus;
+app.get('/rel/:relStatus/:entry?', (req, res) => {
+    // relStatus is required, entry are optional
+    let relStatus = req.params.relStatus.toUpperCase();
     let entry = req.params.entry;
-    let filepath;
+    let queriesList = [];
+
+    let p1 = dbSelect("SELECT * FROM Sleep WHERE status_id = ?", [relStatus]);
+    let p2 = dbSelect("SELECT * FROM RelationshipStatus WHERE status_id = ?", [relStatus]);
+    let pagePromise;
+    let pageName;
+
+    queriesList.push(p1, p2);
 
     // Check if entry is populated
     if (entry) {
         // Go to participant because entry populated
-        filepath = path.join(template, 'participant.html');
+        let p3 = dbSelect("SELECT * FROM Sleep WHERE id = ?", entry);
+        pagePromise = fs.promises.readFile(path.join(template, 'participant.html'), 'utf-8');
+        pageName = 'participant.html';
+
+        queriesList.push(p3);
     } else {
         // Otherwise display result page
-        filepath = path.join(template, 'result.html');
-
-        // Check if relStatus is populated, then display queries based on it
+        pagePromise = fs.promises.readFile(path.join(template, 'result.html'), 'utf-8');
+        pageName = 'result.html';
     }
     
-
-    fs.readFile(filepath, "utf-8", (err, data) => {
-        console.log(filepath);
-        if (err) {
-            console.log('Relation Read Error');
-            res.status(404).type('txt').send('File not found');
-        } else {
-            console.log(entry);
-            console.log(relStatus);
-            console.log('Relation Read Success');
-            res.status(200).type('html').send(data);
-        }
+    pagePromise.then((data) => {
+        Promise.all(queriesList).then((results) => {
+            
+        }).catch((error) => {
+            res.status(404).type('txt').send('Query failed');
+        });
+    }).catch((error) => {
+        res.status(404).type('txt').send(pageName + ' does not exist');
     });
+
+    // fs.readFile(filepath, "utf-8", (err, data) => {
+    //     console.log(filepath);
+    //     if (err) {
+    //         console.log('Relation Read Error');
+    //         res.status(404).type('txt').send('File not found');
+    //     } else {
+    //         console.log(entry);
+    //         console.log(relStatus);
+    //         console.log('Relation Read Success');
+    //         res.status(200).type('html').send(data);
+    //     }
+    // });
 });
 
 // Route 2: Gender
-app.get('/gdr/:gender?/:entry?', (req, res) => {
-    // gender and entry are optional
-    let gender = req.params.relStatus;
+app.get('/gdr/:gender/:entry?', (req, res) => {
+    // gender is required, entry are optional
+    let gender = req.params.gender.toUpperCase();
     let entry = req.params.entry;
-    let filepath;
+    let queriesList = [];
+
+    let p1 = dbSelect("SELECT * FROM Sleep WHERE gender_id = ?", [gender]);
+    let p2 = dbSelect("SELECT * FROM Gender WHERE gender_id = ?", [gender]);
+    let pagePromise;
+    let pageName;
+
+    queriesList.push(p1, p2);
 
     // Check if entry is populated
     if (entry) {
         // Go to participant because entry populated
-        filepath = path.join(template, 'participant.html');
+        let p3 = dbSelect("SELECT * FROM Sleep WHERE id = ?", entry);
+        pagePromise = fs.promises.readFile(path.join(template, 'participant.html'), 'utf-8');
+        pageName = 'participant.html';
+
+        queriesList.push(p3);
     } else {
         // Otherwise display result page
-        filepath = path.join(template, 'result.html');
-
-        // Check if gender is populated, then display queries based on it
+        pagePromise = fs.promises.readFile(path.join(template, 'result.html'), 'utf-8');
+        pageName = 'result.html';
     }
-
-    fs.readFile(filepath, "utf-8", (err, data) => {
-        console.log(filepath);
-        if (err) {
-            console.log('Gender Read Error');
-            res.status(404).type('txt').send('File not found');
-        } else {
-            console.log('Gender Read Success');
-            res.status(200).type('html').send(data);
-        }
+    
+    pagePromise.then((data) => {
+        Promise.all(queriesList).then((results) => {
+            
+        }).catch((error) => {
+            res.status(404).type('txt').send('Query failed');
+        });
+    }).catch((error) => {
+        res.status(404).type('txt').send(pageName + ' does not exist');
     });
 });
 
 // Route 3: Location
-app.get('/loc/:location?/:entry?', (req, res) => {
-    // location and entry are optional
-    let location = req.params.relStatus;
+app.get('/loc/:location/:entry?', (req, res) => {
+    // location is required, entry are optional
+    let location_id = req.params.location.toUpperCase();
     let entry = req.params.entry;
-    let filepath;
+    let queriesList = [];
+
+    let p1 = dbSelect("SELECT * FROM Sleep WHERE location_id = ?", [location_id]);
+    let p2 = dbSelect("SELECT * FROM Location WHERE location_id = ?", [location_id]);
+    let pagePromise;
+    let pageName;
+
+    queriesList.push(p1, p2);
 
     // Check if entry is populated
     if (entry) {
         // Go to participant because entry populated
-        filepath = path.join(template, 'participant.html');
+        let p3 = dbSelect("SELECT * FROM Sleep WHERE id = ?", entry);
+        pagePromise = fs.promises.readFile(path.join(template, 'participant.html'), 'utf-8');
+        pageName = 'participant.html';
+
+        queriesList.push(p3);
     } else {
         // Otherwise display result page
-        filepath = path.join(template, 'result.html');
-
-        // Check if location is populated, then display queries based on it
+        pagePromise = fs.promises.readFile(path.join(template, 'result.html'), 'utf-8');
+        pageName = 'result.html';
     }
-
-    fs.readFile(filepath, "utf-8", (err, data) => {
-        console.log(filepath);
-        if (err) {
-            console.log('Location Read Error');
-            res.status(404).type('txt').send('File not found');
-        } else {
-            console.log('Location Read Success');
-            res.status(200).type('html').send(data);
-        }
+    
+    pagePromise.then((data) => {
+        Promise.all(queriesList).then((results) => {
+            
+        }).catch((error) => {
+            res.status(404).type('txt').send('Query failed');
+        });
+    }).catch((error) => {
+        res.status(404).type('txt').send(pageName + ' does not exist');
     });
 });
 
