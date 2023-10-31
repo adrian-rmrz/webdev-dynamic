@@ -39,19 +39,24 @@ function dbSelect(query, params) {
 }
 
 // Homepage display
-app.get('/', (req, res) => {
+app.get('/:arg?', (req, res) => {
     // Get file path to index.html
     let filepath = path.join(template, 'index.html');
+    let pageName = 'index.html';
 
-    fs.readFile(filepath, "utf-8", (err, data) => {
-        console.log(filepath);
-        if (err) {
-            console.log('Home Read Error');
-            res.status(404).type('txt').send('Home page could not displayed');
-        } else {
-            console.log('Home Read Success');
-            res.status(200).type('html').send(data);
-        }
+    // If there is an additional argument, will display an error message
+    // Catches if user types a path without an argument (e.g. /rel/ or /loc/)
+    if (req.params.arg) {
+        filepath = path.join(template, req.params.arg + '.html');
+        pageName = req.params.arg + '.html';
+    }
+
+    let pagePromise = fs.promises.readFile(filepath, 'utf-8');
+
+    pagePromise.then((data) => {
+        res.status(200).type('html').send(data);
+    }).catch((error) => {
+        res.status(404).type('txt').send(pageName + ' is missing a filter or does not exist');
     });
 })
 
@@ -84,27 +89,18 @@ app.get('/rel/:relStatus/:entry?', (req, res) => {
     }
     
     pagePromise.then((data) => {
+        console.log("Page Read Success");
+
         Promise.all(queriesList).then((results) => {
             
         }).catch((error) => {
             res.status(404).type('txt').send('Query failed');
         });
+
+        res.status(200).type('html').send(data);
     }).catch((error) => {
         res.status(404).type('txt').send(pageName + ' does not exist');
     });
-
-    // fs.readFile(filepath, "utf-8", (err, data) => {
-    //     console.log(filepath);
-    //     if (err) {
-    //         console.log('Relation Read Error');
-    //         res.status(404).type('txt').send('File not found');
-    //     } else {
-    //         console.log(entry);
-    //         console.log(relStatus);
-    //         console.log('Relation Read Success');
-    //         res.status(200).type('html').send(data);
-    //     }
-    // });
 });
 
 // Route 2: Gender
@@ -136,11 +132,16 @@ app.get('/gdr/:gender/:entry?', (req, res) => {
     }
     
     pagePromise.then((data) => {
+        console.log("Page Read Success");
+
         Promise.all(queriesList).then((results) => {
             
         }).catch((error) => {
             res.status(404).type('txt').send('Query failed');
         });
+
+        res.status(200).type('html').send(data);
+
     }).catch((error) => {
         res.status(404).type('txt').send(pageName + ' does not exist');
     });
@@ -175,11 +176,16 @@ app.get('/loc/:location/:entry?', (req, res) => {
     }
     
     pagePromise.then((data) => {
+        console.log("Page Read Success");
+
         Promise.all(queriesList).then((results) => {
             
         }).catch((error) => {
             res.status(404).type('txt').send('Query failed');
         });
+
+        res.status(200).type('html').send(data);
+
     }).catch((error) => {
         res.status(404).type('txt').send(pageName + ' does not exist');
     });
