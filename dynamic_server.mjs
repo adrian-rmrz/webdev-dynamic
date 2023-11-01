@@ -92,24 +92,25 @@ app.get('/rel/:relStatus/:entry?', (req, res) => {
         console.log("Page Read Success");
 
         Promise.all(queriesList).then((results) => {
-            console.log(results);
-        let search = "Relationship Status";
-        let desc = "Sleeping alone data sorted by " + relStatus;
-        let rel_list = results[1];
-        let table_body = '';
-        rel_list.forEach((rel, index) => {
-            let table_row = '<tr>';
-            table_row += '<td>' + rel.duration_id + '</td>\n';
-            table_row += '<td>' + rel.snore_id + '</td>\n';
-            table_row += '<td>' + rel.age_id + '</td>\n';
-            table_row += '</tr>\n';
-            table_body += table_row;
-        });
-        let response = data.replace("$$SEARCH$$", search);
-        response = response.replace("$$HEADER$$", search);
-        response = response.replace("$$DESCRIPTIONS$$", desc);
-        response = response.replace("$$DATA$$", table_body);
-        res.status(200).type('html').send(response);
+            console.log(results[1]);
+            let search = "Relationship Status";
+            let desc = "Sleeping alone data sorted by '" + results[1][0].status_type + "'";
+            let rel_list = results[0];
+            let table_body = '';
+            rel_list.forEach((rel, index) => {
+                let table_row = '<tr>';
+                table_row += '<td><a href="/rel/sc/' + rel.id + '">' + rel.id + '</td>\n';
+                table_row += '<td>' + rel.duration_id + '</td>\n';
+                table_row += '<td>' + rel.snore_id + '</td>\n';
+                table_row += '<td>' + rel.age_id + '</td>\n';
+                table_row += '</tr>\n';
+                table_body += table_row;
+            });
+            let response = data.replace("$$SEARCH$$", search);
+            response = response.replace("$$HEADER$$", search);
+            response = response.replace("$$DESCRIPTIONS$$", desc);
+            response = response.replace("$$DATA$$", table_body);
+            res.status(200).type('html').send(response);
         }).catch((error) => {
             res.status(404).type('txt').send('Query failed');
         });
