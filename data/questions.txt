@@ -1,0 +1,45 @@
+RelationshipStatus = Which of the following best describes your current relationship status?
+
+Duration = How long have you been in your current relationship? If you are not currently in a relationship, please answer according to your last relationship.
+
+SeparateBed = When both you and your partner are at home, how often do you sleep in separate beds?
+
+YourSleepLocation = When you're not sleeping in the same bed as your partner, where do you typically sleep?
+
+PartnerSleepLocation = When you're not sleeping in the same bed, where does your partner typically sleep?
+
+===========================================
+**Note: DoesSnore - OtherOption fall under "What are the reasons that you sleep in separate beds?"**
+
+DoesSnore = One of us snores
+
+FrequentBathroom = One of us makes frequent bathroom trips in the night
+
+IsSick = One of us is sick
+
+Intimate = We are no longer physically intimate
+
+DifferentTemp = We have different temperature preferences for the room
+
+Argument = We've had an argument or fight
+
+NoSpace = Not enough space
+
+NoShareSheets = Do not want to share the covers
+
+SleepChild = One of us needs to sleep with a child
+
+NightWork = Night working/very different sleeping times
+
+OtherOption = Other
+===========================================
+
+StayTogether = To what extent do you agree with the following statement: "sleeping in separate beds helps us to stay together."
+
+SleepBetter = To what extent do you agree with the following statement: "we sleep better when we sleep in separate beds."
+
+SexLife = To what extent do you agree with the following statement:󿿫_"our sex life has improved as a result of sleeping in separate beds."
+
+Occupation = Which of the following best describes your current occupation?
+
+*Rest are just titled like their table names*
