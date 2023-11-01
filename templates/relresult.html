@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>$$SEARCH$$ Results</title>
+        <link rel="stylesheet" href="../css/foundation.css">
+	</head>
+	<body>
+        <div class="off-canvas-wrapper">
+            <!-- Close button -->
+            <button class="close-button" aria-label="Close menu" type="button" data-close>
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            <!-- Menu -->
+            <ul class="vertical menu">
+                <li><a href="/rel/">Relationship Results</a></li>
+                <li><a href="/gdr/">Gender Results</a></li>
+                <li><a href="/loc/">Location Results</a></li>
+            </ul>
+        </div>
+
+        <div class="off-canvas-content">
+            <div class="grid-container">
+                <div class="grid-x">
+                    <div class="cell">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="header"> <center> $$HEADER$$ </center> </div> <br/>
+        <div id="desc"> <center> $$DESCRIPTIONS$$ </center> </div> <br/>
+        <table> 
+            <thead>
+                <tr>
+                    <th> ID </th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Location</th>
+                    <th>Occupation</th>
+                    <th>Income</th>
+                    <th>Education</th>
+                    <th>Separate Bed</th>
+                    <th>Sleep Better</th>
+                    <th>Snore</th>
+                    <th>Sick</th>
+                    <th>Sex Life</th>
+                    <th>Frequent Bathroom</th>
+                    <th>Argument</th>
+                    <th>Intimate</th>
+                </tr>
+            </thead>
+            <tbody>
+                <div id="data"> $$DATA$$ </div> <br/>
+            </tbody>
+        </table>
+
+        <center> <a href="#" class="previous">&laquo; Previous</a>
+        <a href="#" class="next">Next &raquo;</a> </center>
+
+		<script src="./js/vendor/jquery.js"></script>
+        <script src="./js/vendor/what-input.js"></script>
+        <script src="./js/vendor/foundation.js"></script>
+        <script type="application/javascript">
+            $(document).foundation();
+        </script>
+	</body>
+</html>
