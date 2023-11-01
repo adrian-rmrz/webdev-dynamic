@@ -92,12 +92,29 @@ app.get('/rel/:relStatus/:entry?', (req, res) => {
         console.log("Page Read Success");
 
         Promise.all(queriesList).then((results) => {
-            
+            console.log(results);
+        let search = "Relationship Status";
+        let desc = "Sleeping alone data sorted by " + relStatus;
+        let rel_list = results[1];
+        let table_body = '';
+        rel_list.forEach((rel, index) => {
+            let table_row = '<tr>';
+            table_row += '<td>' + rel.duration_id + '</td>\n';
+            table_row += '<td>' + rel.snore_id + '</td>\n';
+            table_row += '<td>' + rel.age_id + '</td>\n';
+            table_row += '</tr>\n';
+            table_body += table_row;
+        });
+        let response = data.replace("$$SEARCH$$", search);
+        response = response.replace("$$HEADER$$", search);
+        response = response.replace("$$DESCRIPTIONS$$", desc);
+        response = response.replace("$$DATA$$", table_body);
+        res.status(200).type('html').send(response);
         }).catch((error) => {
             res.status(404).type('txt').send('Query failed');
         });
-
-        res.status(200).type('html').send(data);
+        
+        //res.status(200).type('html').send(data);
     }).catch((error) => {
         res.status(404).type('txt').send(pageName + ' does not exist');
     });
