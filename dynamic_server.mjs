@@ -56,7 +56,7 @@ app.get('/:arg?', (req, res) => {
     pagePromise.then((data) => {
         res.status(200).type('html').send(data);
     }).catch((error) => {
-        res.status(404).type('txt').send(pageName + ' is missing a filter or does not exist');
+        res.status(404).type('txt').send('Uh oh! ' + pageName + ' is Missing a Filter or does not Exist');
     });
 })
 
@@ -113,7 +113,7 @@ app.get('/rel/:relStatus/:entry?', (req, res) => {
                 response = response.replace("$$DATA$$", table_body);
                 res.status(200).type('html').send(response);
                 }).catch((error) => {
-                    res.status(404).type('txt').send('Query failed');
+                    res.status(404).type('txt').send('Uh Oh! Query Failed: No ID in Database');
                 });
                 
                 //res.status(200).type('html').send(data);
@@ -160,7 +160,7 @@ app.get('/rel/:relStatus/:entry?', (req, res) => {
                 response = response.replace("$$DATA$$", table_body);
                 res.status(200).type('html').send(response);
             }).catch((error) => {
-                res.status(404).type('txt').send('Query failed');
+                res.status(404).type('txt').send('Uh oh! Query Failed: This Type of Relationship Status does not Exist in Database');
             });
             
             //res.status(200).type('html').send(data);
@@ -225,7 +225,7 @@ app.get('/gdr/:gender/:entry?', (req, res) => {
                 response = response.replace("$$DATA$$", table_body);
                 res.status(200).type('html').send(response);
                 }).catch((error) => {
-                    res.status(404).type('txt').send('Query failed');
+                    res.status(404).type('txt').send('Uh Oh! Query Failed: No ID in Database');
                 });
                 
                 //res.status(200).type('html').send(data);
@@ -275,7 +275,7 @@ app.get('/gdr/:gender/:entry?', (req, res) => {
                 response = response.replace("$$DATA$$", table_body);
                 res.status(200).type('html').send(response);
             }).catch((error) => {
-                res.status(404).type('txt').send('Query failed');
+                res.status(404).type('txt').send('Uh oh! Query Failed: This Gender does not Exist in Database');
             });
             
             //res.status(200).type('html').send(data);
@@ -340,7 +340,7 @@ app.get('/loc/:location/:entry?', (req, res) => {
                 response = response.replace("$$DATA$$", table_body);
                 res.status(200).type('html').send(response);
                 }).catch((error) => {
-                    res.status(404).type('txt').send('Query failed');
+                    res.status(404).type('txt').send('Uh Oh! Query Failed: No ID in Database');
                 });
                 
                 //res.status(200).type('html').send(data);
@@ -387,7 +387,7 @@ app.get('/loc/:location/:entry?', (req, res) => {
             response = response.replace("$$DATA$$", table_body);
             res.status(200).type('html').send(response);
             }).catch((error) => {
-                res.status(404).type('txt').send('Query failed');
+                res.status(404).type('txt').send('Uh oh! Query Failed: This Location does not Exist in Database');
             });
             
             //res.status(200).type('html').send(data);
