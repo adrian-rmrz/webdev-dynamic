@@ -38,6 +38,11 @@ function dbSelect(query, params) {
     return p;
 }
 
+function calculatePercentage(data1, data2) {
+    return (data1 / data2) * 100;
+}
+
+
 // Homepage display
 app.get('/:arg?', (req, res) => {
     // Get file path to index.html
@@ -54,7 +59,91 @@ app.get('/:arg?', (req, res) => {
     let pagePromise = fs.promises.readFile(filepath, 'utf-8');
 
     pagePromise.then((data) => {
-        res.status(200).type('html').send(data);
+        let p1 = dbSelect("SELECT * FROM Sleep", []);
+        let p2 = dbSelect("SELECT * FROM RelationshipStatus", []);
+        let p3 = dbSelect("SELECT * FROM Gender", []);
+        let p4 = dbSelect("SELECT * FROM Location", []);
+        let relPlotData;
+        let gdrPlotData;
+        let locPlotData;
+
+        Promise.all([p1, p2, p3, p4]).then((results) => {
+            let total = results[0].length;
+            let relQuery = [];
+            let relPercent = [];
+            let relIDName = [];
+            let gdrQuery = [];
+            let gdrPercent = [];
+            let gdrIDName = [];
+            let locQuery = [];
+            let locPercent = [];
+            let locIDName = [];
+
+            results[1].forEach((id) => {
+                // console.log(id.status_id);
+                relQuery.push(dbSelect("SELECT * FROM Sleep WHERE status_id = ?", [id.status_id]));
+                relIDName.push('"' + id.status_type + '"');
+                // console.log(relIDName);
+            });
+            results[2].forEach((id) => {
+                // console.log(id.gender_id);
+                gdrQuery.push(dbSelect("SELECT * FROM Sleep WHERE gender_id = ?", [id.gender_id]));
+                gdrIDName.push('"' + id.gender_type + '"');
+                // console.log(gdrIDName);
+            });
+            results[3].forEach((id) => {
+                // console.log(id.location_id);
+                locQuery.push(dbSelect("SELECT * FROM Sleep WHERE location_id = ?", [id.location_id]));
+                locIDName.push('"' + id.location + '"');
+            });
+
+            // 
+            Promise.all(relQuery).then((data) => {
+                // console.log(data);
+                data.forEach((id) => {
+                    relPercent.push(calculatePercentage(id.length, total));
+                    // console.log(relPercent);
+                });
+                // console.log(calculatePercentage(data.length, total));
+            }).catch((err) => {
+                console.log(err);
+            }).then(() => {
+                // console.log(relPercent);
+                relPlotData = "[ {values: [" + relPercent + "], labels: [" + relIDName + "], type: 'pie'}]";
+                data = data.replace("$$RELPLOT$$", relPlotData);
+
+                Promise.all(gdrQuery).then((data) => {
+                    // console.log(data);
+                    data.forEach((id) => {
+                        gdrPercent.push(calculatePercentage(id.length, total));
+                        // console.log(relPercent);
+                    });
+                    // console.log(calculatePercentage(data.length, total));
+                }).catch((err) => {
+                    console.log(err);
+                }).then(() => {
+                    // console.log(relPercent);
+                    gdrPlotData = "[ {values: [" + gdrPercent + "], labels: [" + gdrIDName + "], type: 'pie'}]";
+                    data = data.replace("$$GDRPLOT$$", gdrPlotData);
+
+                    Promise.all(locQuery).then((data) => {
+                        // console.log(data);
+                        data.forEach((id) => {
+                            locPercent.push(calculatePercentage(id.length, total));
+                            // console.log(relPercent);
+                        });
+                        // console.log(calculatePercentage(data.length, total));
+                    }).catch((err) => {
+                        console.log(err);
+                    }).then(() => {
+                        // console.log(relPercent);
+                        locPlotData = "[ {values: [" + locPercent + "], labels: [" + locIDName + "], type: 'pie'}]";
+                        data = data.replace("$$LOCPLOT$$", locPlotData);
+                        res.status(200).type('html').send(data);
+                    });
+                });
+            });
+        });
     }).catch((error) => {
         res.status(404).type('txt').send('Uh oh! ' + pageName + ' is Missing a Filter or does not Exist');
     });
@@ -81,7 +170,7 @@ app.get('/rel/:relStatus/:entry?', (req, res) => {
         pagePromise = fs.promises.readFile(path.join(template, 'participant.html'), 'utf-8');
         pageName = 'participant.html';
         pagePromise.then((data) => {
-            console.log("Page Read Success");
+            // console.log("Page Read Success");
             queriesList.push(p3);
             Promise.all(queriesList).then((results) => {
                 let search = "ID";
@@ -91,6 +180,7 @@ app.get('/rel/:relStatus/:entry?', (req, res) => {
                 rel_list.forEach((rel, index) => {
                     let table_row = '<tr>';
                     table_row += '<td>' + rel.age_id + '</td>\n';
+                    table_row += '<td>' + rel.gender_id + '</td>\n';
                     table_row += '<td>' + rel.status_id + '</td>\n';
                     table_row += '<td>' + rel.location_id + '</td>\n';
                     table_row += '<td>' + rel.job_id + '</td>\n';
@@ -127,7 +217,7 @@ app.get('/rel/:relStatus/:entry?', (req, res) => {
     
     
         pagePromise.then((data) => {
-            console.log("Page Read Success");
+            // console.log("Page Read Success");
 
             Promise.all(queriesList).then((results) => {
                 let search = "Relationship Status";
@@ -139,6 +229,7 @@ app.get('/rel/:relStatus/:entry?', (req, res) => {
                     table_row += '<td><a href="/rel/sc/' + rel.id + '">' + rel.id + '</td>\n';
                     table_row += '<td>' + rel.age_id + '</td>\n';
                     table_row += '<td>' + rel.gender_id + '</td>\n';
+                    table_row += '<td>' + rel.status_id + '</td>\n';
                     table_row += '<td>' + rel.location_id + '</td>\n';
                     table_row += '<td>' + rel.job_id + '</td>\n';
                     table_row += '<td>' + rel.income_id + '</td>\n';
@@ -191,7 +282,7 @@ app.get('/gdr/:gender/:entry?', (req, res) => {
         pagePromise = fs.promises.readFile(path.join(template, 'participant.html'), 'utf-8');
         pageName = 'participant.html';
         pagePromise.then((data) => {
-            console.log("Page Read Success");
+            // console.log("Page Read Success");
         
             queriesList.push(p3);
     
@@ -203,6 +294,7 @@ app.get('/gdr/:gender/:entry?', (req, res) => {
                 rel_list.forEach((rel, index) => {
                     let table_row = '<tr>';
                     table_row += '<td>' + rel.age_id + '</td>\n';
+                    table_row += '<td>' + rel.gender_id + '</td>\n';
                     table_row += '<td>' + rel.status_id + '</td>\n';
                     table_row += '<td>' + rel.location_id + '</td>\n';
                     table_row += '<td>' + rel.job_id + '</td>\n';
@@ -240,7 +332,7 @@ app.get('/gdr/:gender/:entry?', (req, res) => {
     
     
         pagePromise.then((data) => {
-            console.log("Page Read Success");
+            // console.log("Page Read Success");
 
             Promise.all(queriesList).then((results) => {
                 let search = "Gender";
@@ -252,6 +344,7 @@ app.get('/gdr/:gender/:entry?', (req, res) => {
                     let table_row = '<tr>';
                     table_row += '<td><a href="/rel/sc/' + rel.id + '">' + rel.id + '</td>\n';
                     table_row += '<td>' + rel.age_id + '</td>\n';
+                    table_row += '<td>' + rel.gender_id + '</td>\n';
                     table_row += '<td>' + rel.status_id + '</td>\n';
                     table_row += '<td>' + rel.location_id + '</td>\n';
                     table_row += '<td>' + rel.job_id + '</td>\n';
@@ -306,7 +399,7 @@ app.get('/loc/:location/:entry?', (req, res) => {
         pagePromise = fs.promises.readFile(path.join(template, 'participant.html'), 'utf-8');
         pageName = 'participant.html';
         pagePromise.then((data) => {
-            console.log("Page Read Success");
+            // console.log("Page Read Success");
         
             queriesList.push(p3);
     
@@ -318,6 +411,7 @@ app.get('/loc/:location/:entry?', (req, res) => {
                 rel_list.forEach((rel, index) => {
                     let table_row = '<tr>';
                     table_row += '<td>' + rel.age_id + '</td>\n';
+                    table_row += '<td>' + rel.gender_id + '</td>\n';
                     table_row += '<td>' + rel.status_id + '</td>\n';
                     table_row += '<td>' + rel.location_id + '</td>\n';
                     table_row += '<td>' + rel.job_id + '</td>\n';
@@ -354,7 +448,7 @@ app.get('/loc/:location/:entry?', (req, res) => {
     
     
     pagePromise.then((data) => {
-        console.log("Page Read Success");
+        // console.log("Page Read Success");
 
         Promise.all(queriesList).then((results) => {
             let search = "Location";

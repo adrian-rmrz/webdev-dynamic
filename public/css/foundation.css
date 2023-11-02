@@ -305,7 +305,7 @@ textarea {
 .grid-container {
   padding-right: 0.625rem;
   padding-left: 0.625rem;
-  max-width: 75rem;
+  max-width: 85rem;
   margin-left: auto;
   margin-right: auto;
 }
@@ -3286,7 +3286,7 @@ ul.no-bullet, ol.no-bullet {
   -webkit-transition: background-color 0.25s ease-out, color 0.25s ease-out;
   transition: background-color 0.25s ease-out, color 0.25s ease-out;
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 1.35rem;
   -webkit-appearance: none;
   line-height: 1;
   text-align: center;
@@ -6493,8 +6493,10 @@ caption {
 }
 
 thead {
-  background: #f8f8f8;
+  background: #bebebe;
   color: #0a0a0a;
+  border-bottom: 1px solid #1f1f1f;
+  border-top: 1px solid #1f1f1f;
 }
 
 tfoot {
@@ -6507,7 +6509,11 @@ tfoot tr {
   background: transparent;
 }
 thead th,
-thead td,
+thead td {
+  padding: 0.5rem 0.625rem 0.5rem 0.625rem;
+  font-weight: bold;
+  text-align: center;
+}
 tfoot th,
 tfoot td {
   padding: 0.5rem 0.625rem 0.625rem;
@@ -6522,7 +6528,7 @@ tbody td {
 
 tbody tr:nth-child(even) {
   border-bottom: 0;
-  background-color: #f1f1f1;
+  background-color: #d6d5d5;
 }
 
 table.unstriped tbody {
@@ -6530,7 +6536,7 @@ table.unstriped tbody {
 }
 table.unstriped tbody tr {
   border-bottom: 1px solid #f1f1f1;
-  background-color: #fefefe;
+  background-color: #cfcfcf;
 }
 
 @media print, screen and (max-width: 63.99875em) {

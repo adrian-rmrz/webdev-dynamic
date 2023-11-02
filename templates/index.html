@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Home | Sleeping Alone</title>
         <link rel="stylesheet" href="../css/foundation.css">
-        <script src="plotly-2.27.0.min.js" charset="utf-8"></script>
+        <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
 	</head>
 	<body>
         <div class="off-canvas-wrapper">
@@ -30,15 +30,28 @@
                 <button id="menu-button" type="button" class="clear button" data-toggle="offCanvas">
                     &Congruent;
                 </button>
-                <div class="grid-container">
+                <div class="grid-container full">
+                    <div id="header"> <center> <h1 class="h2">Sleeping Alone</h1> </center> </div> <br/>
+
+
                     <div class="grid-x">
-                        <div id="tester" style="width:90%;height:250px;"></div>
+                        <div id="relPlot" style="width:33%;height:20rem;"></div>
+                        <div id="locPlot" style="width:33%;height:20rem;"></div>
+                        <div id="gdrPlot" style="width:33%;height:20rem;"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <script src="../js/vendor/plot.js"></script>
+        <script>
+            let RELPLOT = document.getElementById('relPlot');
+            let LOCPLOT = document.getElementById('locPlot');
+            let GDRPLOT = document.getElementById('gdrPlot');
+            
+            Plotly.newPlot( RELPLOT, $$RELPLOT$$, {margin: { t: 0 } } );
+            Plotly.newPlot( LOCPLOT, $$LOCPLOT$$, {margin: { t: 0 } } );
+            Plotly.newPlot( GDRPLOT, $$GDRPLOT$$, {margin: { t: 0 } } );
+        </script>
 		<script src="../js/vendor/jquery.js"></script>
         <script src="../js/vendor/what-input.js"></script>
         <script src="../js/vendor/foundation.js"></script>
