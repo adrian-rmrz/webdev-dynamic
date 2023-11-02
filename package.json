@@ -10,7 +10,11 @@
         "Rainsei Chetana",
         "Nate G."
     ],
-    "repository": {},
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/adrian-rmrz/webdev-dynamic"
+
+    },
     "dependencies": {
         "express": "^4.18.2",
         "plotly.js-dist": "^2.27.0",
