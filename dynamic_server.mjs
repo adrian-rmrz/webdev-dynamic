@@ -85,7 +85,7 @@ app.get('/rel/:relStatus/:entry?', (req, res) => {
             queriesList.push(p3);
             Promise.all(queriesList).then((results) => {
                 let search = "ID";
-                let desc = "Sleeping Alone Data Sorted By Case Number:" + "<br/>" + results[2][0].id;
+                let desc = "Sleeping Alone Data Case Number:" + "<br/>" + results[2][0].id;
                 let rel_list = results[2];
                 let table_body = '';
                 rel_list.forEach((rel, index) => {
@@ -126,48 +126,48 @@ app.get('/rel/:relStatus/:entry?', (req, res) => {
         pageName = 'result.html';
     
     
-    pagePromise.then((data) => {
-        console.log("Page Read Success");
+        pagePromise.then((data) => {
+            console.log("Page Read Success");
 
-        Promise.all(queriesList).then((results) => {
-            let search = "Relationship Status";
-            let desc = "Sleeping Alone Data Sorted By:" + "<br/>" + results[1][0].status_type;
-            let rel_list = results[0];
-            let table_body = '';
-            rel_list.forEach((rel, index) => {
-                let table_row = '<tr>';
-                table_row += '<td><a href="/rel/sc/' + rel.id + '">' + rel.id + '</td>\n';
-                table_row += '<td>' + rel.age_id + '</td>\n';
-                table_row += '<td>' + rel.gender_id + '</td>\n';
-                table_row += '<td>' + rel.location_id + '</td>\n';
-                table_row += '<td>' + rel.job_id + '</td>\n';
-                table_row += '<td>' + rel.income_id + '</td>\n';
-                table_row += '<td>' + rel.degree_id + '</td>\n';
-                table_row += '<td>' + rel.sepbed_id + '</td>\n';
-                table_row += '<td>' + rel.better_id + '</td>\n';
-                table_row += '<td>' + rel.snore_id + '</td>\n';
-                table_row += '<td>' + rel.sick_id + '</td>\n';
-                table_row += '<td>' + rel.sex_id + '</td>\n';
-                table_row += '<td>' + rel.bath_id + '</td>\n';
-                table_row += '<td>' + rel.arg_id + '</td>\n';
-                table_row += '<td>' + rel.intim_id + '</td>\n';
-                table_row += '</tr>\n';
-                table_body += table_row;
+            Promise.all(queriesList).then((results) => {
+                let search = "Relationship Status";
+                let desc = "Sleeping Alone Data Filtered By:" + "<br/>" + results[1][0].status_type;
+                let rel_list = results[0];
+                let table_body = '';
+                rel_list.forEach((rel, index) => {
+                    let table_row = '<tr>';
+                    table_row += '<td><a href="/rel/sc/' + rel.id + '">' + rel.id + '</td>\n';
+                    table_row += '<td>' + rel.age_id + '</td>\n';
+                    table_row += '<td>' + rel.gender_id + '</td>\n';
+                    table_row += '<td>' + rel.location_id + '</td>\n';
+                    table_row += '<td>' + rel.job_id + '</td>\n';
+                    table_row += '<td>' + rel.income_id + '</td>\n';
+                    table_row += '<td>' + rel.degree_id + '</td>\n';
+                    table_row += '<td>' + rel.sepbed_id + '</td>\n';
+                    table_row += '<td>' + rel.better_id + '</td>\n';
+                    table_row += '<td>' + rel.snore_id + '</td>\n';
+                    table_row += '<td>' + rel.sick_id + '</td>\n';
+                    table_row += '<td>' + rel.sex_id + '</td>\n';
+                    table_row += '<td>' + rel.bath_id + '</td>\n';
+                    table_row += '<td>' + rel.arg_id + '</td>\n';
+                    table_row += '<td>' + rel.intim_id + '</td>\n';
+                    table_row += '</tr>\n';
+                    table_body += table_row;
+                });
+                let response = data.replace("$$SEARCH$$", search);
+                response = response.replace("$$HEADER$$", search);
+                response = response.replace("$$DESCRIPTIONS$$", desc);
+                response = response.replace("$$DATA$$", table_body);
+                res.status(200).type('html').send(response);
+            }).catch((error) => {
+                res.status(404).type('txt').send('Query failed');
             });
-            let response = data.replace("$$SEARCH$$", search);
-            response = response.replace("$$HEADER$$", search);
-            response = response.replace("$$DESCRIPTIONS$$", desc);
-            response = response.replace("$$DATA$$", table_body);
-            res.status(200).type('html').send(response);
+            
+            //res.status(200).type('html').send(data);
         }).catch((error) => {
-            res.status(404).type('txt').send('Query failed');
+            res.status(404).type('txt').send(pageName + ' does not exist');
         });
-        
-        //res.status(200).type('html').send(data);
-    }).catch((error) => {
-        res.status(404).type('txt').send(pageName + ' does not exist');
-    });
-}
+    }
 });
 
 // Route 2: Gender
@@ -197,7 +197,7 @@ app.get('/gdr/:gender/:entry?', (req, res) => {
     
             Promise.all(queriesList).then((results) => {
                 let search = "ID";
-                let desc = "Sleeping Alone Data Sorted By Case Number:" + "<br/>" + results[2][0].id;
+                let desc = "Sleeping Alone Data Case Number:" + "<br/>" + results[2][0].id;
                 let rel_list = results[2];
                 let table_body = '';
                 rel_list.forEach((rel, index) => {
@@ -239,39 +239,41 @@ app.get('/gdr/:gender/:entry?', (req, res) => {
         pageName = 'result.html';
     
     
-    pagePromise.then((data) => {
-        console.log("Page Read Success");
+        pagePromise.then((data) => {
+            console.log("Page Read Success");
 
-        Promise.all(queriesList).then((results) => {
-            let search = "Gender";
-            let desc = "Sleeping Alone Data Sorted By:" + "<br/>" + results[1][0].gender_type;
-            let rel_list = results[0];
-            let table_body = '';
-            rel_list.forEach((rel, index) => {
-                let table_row = '<tr>';
-                table_row += '<td><a href="/rel/sc/' + rel.id + '">' + rel.id + '</td>\n';
-                table_row += '<td>' + rel.age_id + '</td>\n';
-                table_row += '<td>' + rel.status_id + '</td>\n';
-                table_row += '<td>' + rel.location_id + '</td>\n';
-                table_row += '<td>' + rel.job_id + '</td>\n';
-                table_row += '<td>' + rel.income_id + '</td>\n';
-                table_row += '<td>' + rel.degree_id + '</td>\n';
-                table_row += '<td>' + rel.sepbed_id + '</td>\n';
-                table_row += '<td>' + rel.better_id + '</td>\n';
-                table_row += '<td>' + rel.snore_id + '</td>\n';
-                table_row += '<td>' + rel.sick_id + '</td>\n';
-                table_row += '<td>' + rel.sex_id + '</td>\n';
-                table_row += '<td>' + rel.bath_id + '</td>\n';
-                table_row += '<td>' + rel.arg_id + '</td>\n';
-                table_row += '<td>' + rel.intim_id + '</td>\n';
-                table_row += '</tr>\n';
-                table_body += table_row;
-            });
-            let response = data.replace("$$SEARCH$$", search);
-            response = response.replace("$$HEADER$$", search);
-            response = response.replace("$$DESCRIPTIONS$$", desc);
-            response = response.replace("$$DATA$$", table_body);
-            res.status(200).type('html').send(response);
+            Promise.all(queriesList).then((results) => {
+                let search = "Gender";
+                let desc = "Sleeping Alone Data Filtered By:" + "<br/>" + results[1][0].gender_type;
+                let rel_list = results[0];
+                let table_body = '';
+
+                rel_list.forEach((rel, index) => {
+                    let table_row = '<tr>';
+                    table_row += '<td><a href="/rel/sc/' + rel.id + '">' + rel.id + '</td>\n';
+                    table_row += '<td>' + rel.age_id + '</td>\n';
+                    table_row += '<td>' + rel.status_id + '</td>\n';
+                    table_row += '<td>' + rel.location_id + '</td>\n';
+                    table_row += '<td>' + rel.job_id + '</td>\n';
+                    table_row += '<td>' + rel.income_id + '</td>\n';
+                    table_row += '<td>' + rel.degree_id + '</td>\n';
+                    table_row += '<td>' + rel.sepbed_id + '</td>\n';
+                    table_row += '<td>' + rel.better_id + '</td>\n';
+                    table_row += '<td>' + rel.snore_id + '</td>\n';
+                    table_row += '<td>' + rel.sick_id + '</td>\n';
+                    table_row += '<td>' + rel.sex_id + '</td>\n';
+                    table_row += '<td>' + rel.bath_id + '</td>\n';
+                    table_row += '<td>' + rel.arg_id + '</td>\n';
+                    table_row += '<td>' + rel.intim_id + '</td>\n';
+                    table_row += '</tr>\n';
+                    table_body += table_row;
+                });
+
+                let response = data.replace("$$SEARCH$$", search);
+                response = response.replace("$$HEADER$$", search);
+                response = response.replace("$$DESCRIPTIONS$$", desc);
+                response = response.replace("$$DATA$$", table_body);
+                res.status(200).type('html').send(response);
             }).catch((error) => {
                 res.status(404).type('txt').send('Query failed');
             });
@@ -281,7 +283,7 @@ app.get('/gdr/:gender/:entry?', (req, res) => {
             res.status(404).type('txt').send(pageName + ' does not exist');
         });
     }
-    });
+});
 
 // Route 3: Location
 app.get('/loc/:location/:entry?', (req, res) => {
@@ -310,7 +312,7 @@ app.get('/loc/:location/:entry?', (req, res) => {
     
             Promise.all(queriesList).then((results) => {
                 let search = "ID";
-                let desc = "Sleeping Alone Data Sorted By Case Number:" + "<br/>" + results[2][0].id;
+                let desc = "Sleeping Alone Data Case Number:" + "<br/>" + results[2][0].id;
                 let rel_list = results[2];
                 let table_body = '';
                 rel_list.forEach((rel, index) => {
@@ -356,7 +358,7 @@ app.get('/loc/:location/:entry?', (req, res) => {
 
         Promise.all(queriesList).then((results) => {
             let search = "Location";
-            let desc = "Sleeping Alone Data Sorted By:" + "<br/>" + results[1][0].location;
+            let desc = "Sleeping Alone Data Filtered By:" + "<br/>" + results[1][0].location;
             let rel_list = results[0];
             let table_body = '';
             rel_list.forEach((rel, index) => {

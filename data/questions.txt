@@ -38,7 +38,7 @@ StayTogether = To what extent do you agree with the following statement: "sleepi
 
 SleepBetter = To what extent do you agree with the following statement: "we sleep better when we sleep in separate beds."
 
-SexLife = To what extent do you agree with the following statement:󿿫_"our sex life has improved as a result of sleeping in separate beds."
+SexLife = To what extent do you agree with the following statement: "our sex life has improved as a result of sleeping in separate beds."
 
 Occupation = Which of the following best describes your current occupation?
 
