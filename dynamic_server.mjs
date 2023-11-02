@@ -167,14 +167,26 @@ app.get('/rel/:relStatus/:entry?', (req, res) => {
     if (entry) {
         // Go to participant because entry populated
         let p3 = dbSelect("SELECT * FROM Sleep WHERE id = ?", entry);
+        let p4 = dbSelect("SELECT * FROM Sleep", []);
         pagePromise = fs.promises.readFile(path.join(template, 'participant.html'), 'utf-8');
         pageName = 'participant.html';
         pagePromise.then((data) => {
             // console.log("Page Read Success");
-            queriesList.push(p3);
+            queriesList.push(p3, p4);
+
             Promise.all(queriesList).then((results) => {
                 let search = "ID";
-                let desc = "Sleeping Alone Data Case Number:" + "<br/>" + results[2][0].id;
+                let desc = "Sleeping Alone Data Case Number:" + "<br/><b>" + results[2][0].id + "</b>";
+
+                let total = results[3].length;
+                let index = results[2][0].id - 1001;
+                let next = index + 1 % total;
+                let prev = (index - 1 + total) % total;
+                next += 1001;
+                prev += 1001;
+                let nextURL = '/rel/' + relStatus + '/' + next;
+                let prevURL = '/rel/' + relStatus + '/' + prev;
+
                 let rel_list = results[2];
                 let table_body = '';
                 rel_list.forEach((rel, index) => {
@@ -198,8 +210,9 @@ app.get('/rel/:relStatus/:entry?', (req, res) => {
                     table_body += table_row;
                 });
                 let response = data.replace("$$ENTRY$$", search);
-                response = response.replace("$$HEADER$$", search);
                 response = response.replace("$$DESCRIPTIONS$$", desc);
+                response = response.replace("$$PREVIOUS$$", prevURL);
+                response = response.replace("$$NEXT$$", nextURL);
                 response = response.replace("$$DATA$$", table_body);
                 res.status(200).type('html').send(response);
                 }).catch((error) => {
@@ -221,12 +234,12 @@ app.get('/rel/:relStatus/:entry?', (req, res) => {
 
             Promise.all(queriesList).then((results) => {
                 let search = "Relationship Status";
-                let desc = "Sleeping Alone Data Filtered By:" + "<br/>" + results[1][0].status_type;
+                let desc = "Sleeping Alone Data Filtered By:" + "<br/><b>" + results[1][0].status_type + "</b>";
                 let rel_list = results[0];
                 let table_body = '';
                 rel_list.forEach((rel, index) => {
                     let table_row = '<tr>';
-                    table_row += '<td><a href="/rel/sc/' + rel.id + '">' + rel.id + '</td>\n';
+                    table_row += '<td><a href="/rel/' + relStatus + '/' + rel.id + '">' + rel.id + '</td>\n';
                     table_row += '<td>' + rel.age_id + '</td>\n';
                     table_row += '<td>' + rel.gender_id + '</td>\n';
                     table_row += '<td>' + rel.status_id + '</td>\n';
@@ -279,18 +292,29 @@ app.get('/gdr/:gender/:entry?', (req, res) => {
     if (entry) {
         // Go to participant because entry populated
         let p3 = dbSelect("SELECT * FROM Sleep WHERE id = ?", entry);
+        let p4 = dbSelect("SELECT * FROM Sleep", []);
         pagePromise = fs.promises.readFile(path.join(template, 'participant.html'), 'utf-8');
         pageName = 'participant.html';
         pagePromise.then((data) => {
             // console.log("Page Read Success");
         
-            queriesList.push(p3);
+            queriesList.push(p3, p4);
     
             Promise.all(queriesList).then((results) => {
                 let search = "ID";
-                let desc = "Sleeping Alone Data Case Number:" + "<br/>" + results[2][0].id;
+                let desc = "Sleeping Alone Data Case Number:" + "<br/><b>" + results[2][0].id + "</b>";
                 let rel_list = results[2];
                 let table_body = '';
+
+                let total = results[3].length;
+                let index = results[2][0].id - 1001;
+                let next = index + 1 % total;
+                let prev = (index - 1 + total) % total;
+                next += 1001;
+                prev += 1001;
+                let nextURL = '/gdr/' + gender + '/' + next;
+                let prevURL = '/gdr/' + gender + '/' + prev;
+
                 rel_list.forEach((rel, index) => {
                     let table_row = '<tr>';
                     table_row += '<td>' + rel.age_id + '</td>\n';
@@ -312,8 +336,9 @@ app.get('/gdr/:gender/:entry?', (req, res) => {
                     table_body += table_row;
                 });
                 let response = data.replace("$$ENTRY$$", search);
-                response = response.replace("$$HEADER$$", search);
                 response = response.replace("$$DESCRIPTIONS$$", desc);
+                response = response.replace("$$PREVIOUS$$", prevURL);
+                response = response.replace("$$NEXT$$", nextURL);
                 response = response.replace("$$DATA$$", table_body);
                 res.status(200).type('html').send(response);
                 }).catch((error) => {
@@ -336,13 +361,13 @@ app.get('/gdr/:gender/:entry?', (req, res) => {
 
             Promise.all(queriesList).then((results) => {
                 let search = "Gender";
-                let desc = "Sleeping Alone Data Filtered By:" + "<br/>" + results[1][0].gender_type;
+                let desc = "Sleeping Alone Data Filtered By:" + "<br/><b>" + results[1][0].gender_type + "</b>";
                 let rel_list = results[0];
                 let table_body = '';
 
                 rel_list.forEach((rel, index) => {
                     let table_row = '<tr>';
-                    table_row += '<td><a href="/rel/sc/' + rel.id + '">' + rel.id + '</td>\n';
+                    table_row += '<td><a href="/gdr/' + gender + '/' + rel.id + '">' + rel.id + '</td>\n';
                     table_row += '<td>' + rel.age_id + '</td>\n';
                     table_row += '<td>' + rel.gender_id + '</td>\n';
                     table_row += '<td>' + rel.status_id + '</td>\n';
@@ -396,18 +421,36 @@ app.get('/loc/:location/:entry?', (req, res) => {
     if (entry) {
         // Go to participant because entry populated
         let p3 = dbSelect("SELECT * FROM Sleep WHERE id = ?", entry);
+        let p4 = dbSelect("SELECT * FROM Sleep", []);
         pagePromise = fs.promises.readFile(path.join(template, 'participant.html'), 'utf-8');
         pageName = 'participant.html';
         pagePromise.then((data) => {
             // console.log("Page Read Success");
         
-            queriesList.push(p3);
+            queriesList.push(p3, p4);
     
             Promise.all(queriesList).then((results) => {
                 let search = "ID";
-                let desc = "Sleeping Alone Data Case Number:" + "<br/>" + results[2][0].id;
+                let desc = "Sleeping Alone Data Case Number:" + "<br/><b>" + results[2][0].id + "</b>";
                 let rel_list = results[2];
                 let table_body = '';
+
+                let total = results[3].length;
+                let index = results[2][0].id - 1001;
+                let next = (index + 1) % total;
+                let prev = (index - 1 + total) % total;
+                console.log(next);
+                console.log(prev);
+                next += 1001;
+                prev += 1001;
+                let nextURL = '/loc/' + location_id + '/' + next;
+                let prevURL = '/loc/' + location_id + '/' + prev;
+
+                console.log(total);
+                console.log(index);
+                console.log(next);
+                console.log(prev);
+
                 rel_list.forEach((rel, index) => {
                     let table_row = '<tr>';
                     table_row += '<td>' + rel.age_id + '</td>\n';
@@ -429,8 +472,9 @@ app.get('/loc/:location/:entry?', (req, res) => {
                     table_body += table_row;
                 });
                 let response = data.replace("$$ENTRY$$", search);
-                response = response.replace("$$HEADER$$", search);
                 response = response.replace("$$DESCRIPTIONS$$", desc);
+                response = response.replace("$$PREVIOUS$$", prevURL);
+                response = response.replace("$$NEXT$$", nextURL);
                 response = response.replace("$$DATA$$", table_body);
                 res.status(200).type('html').send(response);
                 }).catch((error) => {
@@ -452,15 +496,16 @@ app.get('/loc/:location/:entry?', (req, res) => {
 
         Promise.all(queriesList).then((results) => {
             let search = "Location";
-            let desc = "Sleeping Alone Data Filtered By:" + "<br/>" + results[1][0].location;
+            let desc = "Sleeping Alone Data Filtered By:" + "<br/><b>" + results[1][0].location + "</b>";
             let rel_list = results[0];
             let table_body = '';
             rel_list.forEach((rel, index) => {
                 let table_row = '<tr>';
-                table_row += '<td><a href="/rel/sc/' + rel.id + '">' + rel.id + '</td>\n';
+                table_row += '<td><a href="/loc/' + location_id + '/' + rel.id + '">' + rel.id + '</td>\n';
                 table_row += '<td>' + rel.age_id + '</td>\n';
                 table_row += '<td>' + rel.gender_id + '</td>\n';
                 table_row += '<td>' + rel.status_id + '</td>\n';
+                table_row += '<td>' + rel.location_id + '</td>\n';
                 table_row += '<td>' + rel.job_id + '</td>\n';
                 table_row += '<td>' + rel.income_id + '</td>\n';
                 table_row += '<td>' + rel.degree_id + '</td>\n';
